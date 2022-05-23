@@ -18,6 +18,6 @@ public interface UserService extends UserDetailsService {
 
     User findById(Long id);
 
-    UserDetails getUserInfo();
+    User getUserInfo();
 
 }

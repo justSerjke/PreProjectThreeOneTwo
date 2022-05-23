@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
@@ -17,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -41,6 +44,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.getById(id);
     }
 
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
@@ -48,12 +52,13 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("User doesn't exists");
         }
 
-        return new org.springframework.security.core.userdetails.User((user.getEmail()), user.getPassword(), user.getAuthorities());
+        return new org.springframework.security.core.userdetails
+                .User((user.getEmail()), user.getPassword(), user.getAuthorities());
     }
 
     @Override
     public User getUserInfo() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (User) auth.getPrincipal();
+        return userRepository.findByEmail(auth.getName());
     }
 }
