@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<h3 th:text="${user.id == null ? 'Добавление user' : 'Изменение user'}"></h3>
+<h3 th:text="${user.id == null ? 'Добавить user' : 'Измененить user'}"></h3>
 <div class="container">
     <form th:action="@{/admin/edit}"
           th:object="${user}" method="post" class="form-horizontal">
