@@ -1,9 +1,13 @@
 package ru.kata.spring.boot_security.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.kata.spring.boot_security.demo.configs.SuccessUserHandler;
+import ru.kata.spring.boot_security.demo.configs.WebSecurityConfig;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
@@ -14,6 +18,14 @@ import java.util.stream.Stream;
 
 @SpringBootApplication
 public class SpringBootSecurityDemoApplication {
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    public SpringBootSecurityDemoApplication(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(SpringBootSecurityDemoApplication.class, args);
     }
@@ -25,13 +37,13 @@ public class SpringBootSecurityDemoApplication {
             Role user = roleRepository.save(new Role("ROLE_USER"));
 
             userRepository.save(new User("Sergey", "Fedorov", "sf@gmail.com",
-                    "$2a$12$.cKYQ6fVU75lLe.EeyKf7u7mz/EmsSIZ4fE8/5VP7z913nsv3oE5y",
+                    bCryptPasswordEncoder.encode("sf"),
                     Stream.of(admin, user).collect(Collectors.toSet())));
             userRepository.save(new User("Lena", "Levitskikh", "el@mail.ru",
-                    "$2a$12$FTF9trzFi/lpy5dtbf93Ke/3HVXUm0wQuYz1FWgxf5ct73lJVXBtK",
+                    bCryptPasswordEncoder.encode("el"),
                     Stream.of(user).collect(Collectors.toSet())));
             userRepository.save(new User("Mentor", "Mentorov", "mm@yandex.ru",
-                    "$2a$12$OATE0jGt2dcymTwOoyMBue1nwosOsd6ORLIm.gmbDy1IQx5f1FoLC\n",
+                    bCryptPasswordEncoder.encode("mm"),
                     Stream.of(user).collect(Collectors.toSet())));
         };
     }
