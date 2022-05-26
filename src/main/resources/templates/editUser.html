@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<h3 th:text="${user.id == null ? 'Добавить user' : 'Измененить user'}"></h3>
+<h3 th:text="${user.id == null ? 'Добавить user' : 'Изменить user'}"></h3>
 <div class="container">
     <form th:action="@{/admin/edit}"
           th:object="${user}" method="post" class="form-horizontal">
@@ -29,16 +29,6 @@
         <div style="margin-bottom: 25px" class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
             <input th:field="*{email}" placeholder="email" class="form-control"/>
-        </div>
-
-        <div style="margin-bottom: 25px" class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-            <input th:field="*{password}" placeholder="password (*)" class="form-control" hidden/>
-        </div>
-
-        <div style="margin-bottom: 25px" class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-            <input th:field="*{roles}" placeholder="roles (*)" class="form-control" hidden/>
         </div>
 
         <div style="margin-top: 10px" class="form-group">
